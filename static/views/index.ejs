@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>How to become a YouTuber</title>
+    <link rel="stylesheet" href="/main.css">
+  </head>
+  <body>
+	<h1>Practical Guid: So you want to be a YouTuber?!</h1>
+	<p>
+		Do the following:
+		<ul>
+			<li>
+				Pump out videos frequently
+			</li>
+			<li>
+				Choose outrageously clickbaity titles
+			</li>
+			<li>
+				Follow latest dumb trends
+			</li>
+			<li>
+				Have an opinion on everything
+			</li>
+		</ul>
+	</p>
+	<p>
+		List of advertisers to choose from:
+		<% if(!data || !data.length) { %>
+			<b>No advertisers to show yet. Add some.</b>
+		<% } else { %>
+			<ul>
+				<% for(const ad of data){ %>
+					<li>
+						<b><%= ad.txt %></b>
+						Added on:
+						<i><%= ad.date %></i>
+					</li>
+				<% } %>
+			</ul>
+		<% } %>
+	</p>
+	<div>
+		<h2>If you know other sponsors add them here: </h2>
+		<form id="adForm" action="#" method="post" autocomplete="off">
+			<div>
+				<label for"name">Sponsor name: </label>
+				<input type="text" placeholder="type here..." id="name" name="txt"/>
+			</div>
+			<input type="submit" value="Suggest new advertiser" />
+		</form>
+	</div>
+	<script src="/main.js"></script>
+  </body>
+</html>

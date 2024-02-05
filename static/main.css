@@ -1,0 +1,12 @@
+
+
+document, body {
+	font-size: 18px;
+}
+
+input[type=submit]{
+	margin: 1vw;
+	background-color:aliceblue;
+	color: gray;
+	cursor: pointer;
+}
