@@ -1,6 +1,5 @@
 const express = require("express");
 const mongo = require("mongodb");
-const parser = require("body-parser");
 const path = require("path");
 const config = require("./config.json");
 const { log } = require("console");
@@ -8,8 +7,8 @@ const { log } = require("console");
 const app = express();
 
 // express basic setup
-app.use(parser.urlencoded());
-app.use(parser.json());
+app.use(express.urlencoded({extended: true}));
+app.use(express.json());
 
 app.use(express.static(path.join(__dirname, "static")));
 
@@ -21,11 +20,12 @@ app.set("views", path.join(__dirname, "static", "views"));
 const dbConnPr = (()=>{
 	const {protocol, usr, pwd, hostname, port, dbName} = config.mongo;
 	// const MONGO_URL = protocol + "://" + usr + ":" + pwd + "@" + hostname + ":" + port + "/" + dbName;
-	const MONGO_URL = protocol + "://" + hostname + ":" + port + "/" + dbName;
+	const MONGO_URL = protocol + "://" + usr + ":" + pwd + "@" + hostname + ":" + port;
+	// const MONGO_URL = protocol + "://" + hostname + ":" + port + "/" + dbName;
 	const mongoClient = new mongo.MongoClient(MONGO_URL);
 	return mongoClient.connect().then(connection=>{
 		console.log("Mongo connected.");
-		return connection.db();
+		return connection.db(dbName);
 	});
 })();
 
