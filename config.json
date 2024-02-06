@@ -3,7 +3,7 @@
 		"protocol": "mongodb",
 		"usr": "aliaksei",
 		"pwd": "123pwd",
-		"hostname": "127.0.0.1",
+		"hostname": "test-mongodb",
 		"port": 27017,
 		"dbName": "idg2671"
 	},

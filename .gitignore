@@ -3,3 +3,5 @@
 node_modules
 package-lock.json
 docker.commands.md
+tmp.txt
+db.loc

@@ -1,0 +1,8 @@
+node_modules
+.eslingrc.js
+.gitignore
+docker.commands.md
+package-lock.json
+.git
+tmp.txt
+db.loc

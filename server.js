@@ -19,7 +19,6 @@ app.set("views", path.join(__dirname, "static", "views"));
 // connecting Mongo
 const dbConnPr = (()=>{
 	const {protocol, usr, pwd, hostname, port, dbName} = config.mongo;
-	// const MONGO_URL = protocol + "://" + usr + ":" + pwd + "@" + hostname + ":" + port + "/" + dbName;
 	const MONGO_URL = protocol + "://" + usr + ":" + pwd + "@" + hostname + ":" + port;
 	// const MONGO_URL = protocol + "://" + hostname + ":" + port + "/" + dbName;
 	const mongoClient = new mongo.MongoClient(MONGO_URL);
