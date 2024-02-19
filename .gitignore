@@ -9,3 +9,4 @@ secrets.folder/*
 logs/*
 TODO
 .vscode
+.editorconfig
