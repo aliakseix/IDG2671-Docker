@@ -36,6 +36,11 @@ app.get("/", (req, res)=>{
 	}).catch(err=>handleErr(err, res));
 });
 
+app.get("/json", (req, res)=>{
+	console.log("serving json...");
+	res.status(200).json(JSON.stringify({data: "hello there - here is some JSON for you"}));
+});
+
 // handling incoming data
 app.post("/save-ads", (req, res)=>{
 	console.log("Saving an ad...");
