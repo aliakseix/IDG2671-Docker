@@ -1,8 +1,7 @@
 const express = require("express");
 const mongo = require("mongodb");
 const path = require("path");
-const config = require("./config.json");
-const { log } = require("console");
+const config = require("./config.js");
 
 const app = express();
 
@@ -20,7 +19,6 @@ app.set("views", path.join(__dirname, "static", "views"));
 const dbConnPr = (()=>{
 	const {protocol, usr, pwd, hostname, port, dbName} = config.mongo;
 	const MONGO_URL = protocol + "://" + usr + ":" + pwd + "@" + hostname + ":" + port;
-	// const MONGO_URL = protocol + "://" + hostname + ":" + port + "/" + dbName;
 	const mongoClient = new mongo.MongoClient(MONGO_URL);
 	return mongoClient.connect().then(connection=>{
 		console.log("Mongo connected.");

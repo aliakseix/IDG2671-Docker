@@ -1,0 +1,69 @@
+services:
+  test-mongodb:
+    image: mongo
+    container_name: fancy-mongodb-service
+    expose:
+      - ${MONGO_PORT}
+    environment:
+      MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/mongo_admin_pwd
+    deploy:
+      labels:
+        example.label: This is a pointless label
+      restart_policy:
+        condition: on-failure
+        delay: 3s
+        max_attempts: 10
+        window: 15s
+      resources:
+        limits:
+          cpus: "0.75"
+          memory: 175M
+        reservations:
+          cpus: "0.25"
+          memory: 75M
+    secrets:
+      - mongo_admin_pwd
+    healthcheck:
+      test: mongosh --eval "db.adminCommand('ping').ok"
+      interval: 6s
+      timeout: 5s
+      retries: 3
+    env_file: .mongo.env
+    networks:
+      some-fancy-network:
+        aliases:
+          - ${MONGO_HOSTNAME}
+      
+
+  test-app:
+    image: yt-app-comp:0.2
+    labels:
+      cool.example: "some metainformation about our container"
+    depends_on:
+      test-mongodb:
+        condition: service_healthy
+        restart: true
+    build: .
+    ports:
+      - 8081:8081
+    environment:
+      MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/mongo_admin_pwd
+    secrets:
+      - mongo_admin_pwd
+    env_file:
+      - .mongo.env
+      - .env
+    logging:
+      driver: "local"
+      options:
+        max-size: 10M
+        max-file: 5
+    networks:
+      - some-fancy-network
+
+secrets:
+  mongo_admin_pwd:
+    file: ./secrets.folder/mongo_admin_pwd.txt
+
+networks:
+  some-fancy-network:

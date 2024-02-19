@@ -1,12 +1,12 @@
 FROM node:21.6.1-slim
 
 LABEL author="Aliaksei"
-LABEL version="0.0.1"
+LABEL version="0.0.2"
 
 EXPOSE 8081/tcp
 
-ENV MONGO_INITDB_ROOT_USERNAME=aliaksei \
-	MONGO_INITDB_ROOT_PASSWORD=123pwd
+# ENV MONGO_INITDB_ROOT_USERNAME=aliaksei \
+# 	MONGO_INITDB_ROOT_PASSWORD=123pwd
 
 RUN groupadd app-gr
 
@@ -25,4 +25,4 @@ RUN npm install
 
 USER usr
 
-CMD node server.js
+CMD ["node", "server.js"]

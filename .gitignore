@@ -2,6 +2,9 @@
 .DS_Store
 node_modules
 package-lock.json
-docker.commands.md
+docker.commands.txt
 tmp.txt
 db.loc
+secrets.folder/*
+logs/*
+TODO

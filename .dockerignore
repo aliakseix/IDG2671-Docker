@@ -6,3 +6,6 @@ package-lock.json
 .git
 tmp.txt
 db.loc
+secrets.folder/*
+logs/*
+TODO
