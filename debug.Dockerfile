@@ -9,6 +9,7 @@ RUN groupadd app-gr
 
 RUN useradd -g app-gr usr
 
+
 RUN mkdir /app
 
 WORKDIR /app
@@ -17,6 +18,8 @@ COPY --chown=usr:app-gr . /app
 
 RUN npm install
 
-USER usr
+# running as root
+# USER usr
 
-CMD ["node", "server.js"]
+# adding -- watch for reload
+CMD ["node", "--inspect=0.0.0.0", "--watch", "server.js"]

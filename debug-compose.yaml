@@ -1,7 +1,7 @@
 services:
-  test-mongodb:
+  test-mongodb-debug:
     image: mongo
-    container_name: fancy-mongodb-service
+    container_name: debug-fancy-mongodb-service
     expose:
       - ${MONGO_PORT}
     environment:
@@ -39,17 +39,20 @@ services:
         max-size: 10M
         max-file: 5
 
-  test-app:
-    image: yt-app-comp:0.2
+  test-app-debug:
+    image: yt-app-comp:debug
     labels:
-      cool.example: "some metainformation about our container"
+      info: "THIS SETUP IS FOR DEBUG ONLY"
     depends_on:
-      test-mongodb:
+      test-mongodb-debug:
         condition: service_healthy
         restart: true
-    build: .
+    build:
+      context: .
+      dockerfile: ./debug.Dockerfile
     ports:
       - 8081:8081
+      - 9229:9229
     environment:
       MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/mongo_admin_pwd
     secrets:
@@ -64,6 +67,9 @@ services:
         max-file: 5
     networks:
       - some-fancy-network
+    # sharing main dir files - to skip rebuilding containers on every change
+    volumes:
+      - .:/app
 
 secrets:
   mongo_admin_pwd:

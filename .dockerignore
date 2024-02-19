@@ -9,3 +9,4 @@ db.loc
 secrets.folder/*
 logs/*
 TODO
+.vscode
