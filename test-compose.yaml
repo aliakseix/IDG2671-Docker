@@ -1,0 +1,58 @@
+services:
+  test-fancy-mongodb-service:
+    image: mongo
+    container_name: test-fancy-mongodb-service
+    expose:
+      - ${MONGO_PORT}
+    environment:
+      MONGO_INITDB_ROOT_PASSWORD: test-only-pwd
+    deploy:
+      labels:
+        example.label: This is a pointless label
+      restart_policy:
+        condition: on-failure
+        delay: 3s
+        max_attempts: 10
+        window: 15s
+      resources:
+        limits:
+          cpus: "0.75"
+          memory: 175M
+        reservations:
+          cpus: "0.25"
+          memory: 75M
+    healthcheck:
+      test: mongosh --eval "db.adminCommand('ping').ok"
+      interval: 6s
+      timeout: 5s
+      retries: 3
+    env_file: .mongo.env
+    networks:
+      some-fancy-network:
+        aliases:
+          - ${MONGO_HOSTNAME}
+
+  test-app-debug:
+    image: yt-app-comp:testing
+    labels:
+      info: "THIS SETUP IS FOR DEBUG ONLY"
+    depends_on:
+      test-fancy-mongodb-service:
+        condition: service_healthy
+        restart: true
+    build:
+      context: .
+      dockerfile: ./debug.Dockerfile
+    ports:
+      - 8081:8081
+    environment:
+      MONGO_INITDB_ROOT_PASSWORD: test-only-pwd
+    env_file:
+      - .mongo.env
+      - .env
+    networks:
+      - some-fancy-network
+    command: ["npm", "test"]
+
+networks:
+  some-fancy-network:

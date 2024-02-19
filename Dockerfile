@@ -15,7 +15,7 @@ WORKDIR /app
 
 COPY --chown=usr:app-gr . /app
 
-RUN npm install
+RUN npm install --production
 
 USER usr
 

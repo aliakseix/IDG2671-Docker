@@ -4,7 +4,7 @@
   "description": "Tiny expressjs + Mongo app for teaching Docker",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha test/*.js",
     "start": "node server.js"
   },
   "keywords": [
@@ -17,5 +17,9 @@
     "ejs": "^3.1.9",
     "express": "^4.18.2",
     "mongodb": "^6.3.0"
+  },
+  "devDependencies": {
+    "chai": "^4.3.1",
+    "mocha": "^10.3.0"
   }
 }
