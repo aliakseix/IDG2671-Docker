@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "mocha test/*.js",
-    "start": "node server.js"
+    "start": "node server.js",
+    "lint": "jshint **/*.js"
   },
   "keywords": [
     "need",
@@ -20,6 +21,7 @@
   },
   "devDependencies": {
     "chai": "^4.3.1",
+    "jshint": "^2.13.6",
     "mocha": "^10.3.0"
   }
 }
