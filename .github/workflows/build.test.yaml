@@ -12,10 +12,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: isbang/compose-action@v1.5.1
+      - uses: actions/setup-node@v3
         with:
-          compose-file: "test-compose.yaml"
-          down-flags: "--volumes"
+          node-version: 21.x
+          cache: npm
+      - run: npm install
+      - name: linting
+        run: npm run lint
+      - name: actual testing
+        run: npm test
 
   build:
     runs-on: ubuntu-latest
