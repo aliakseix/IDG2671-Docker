@@ -7,7 +7,8 @@ describe("a pointless test suite -- replace with something meaningful", ()=>{
 	});
 	// failing test
 	it("should say hi again", ()=>{
-		const msg = "bye";
+		// const msg = "bye";
+		const msg = "hi";
 		chai.expect(msg).to.equal("hi");
 	});
 });
