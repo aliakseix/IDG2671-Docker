@@ -16,7 +16,7 @@ jobs:
         with:
           node-version: 21.x
           cache: npm
-      - run: npm install
+      - run: npm ci
       - name: linting
         run: npm run lint
       - name: actual testing

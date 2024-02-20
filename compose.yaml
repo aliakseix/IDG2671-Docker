@@ -48,6 +48,7 @@ services:
         condition: service_healthy
         restart: true
     build: .
+    restart: unless-stopped
     ports:
       - 8081:8081
     environment:
