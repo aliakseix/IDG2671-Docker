@@ -44,7 +44,7 @@ services:
       context: .
       dockerfile: ./debug.Dockerfile
     ports:
-      - 8081:8081
+      - ${APP_PORT}:${APP_PORT}
     environment:
       MONGO_INITDB_ROOT_PASSWORD: test-only-pwd
     env_file:

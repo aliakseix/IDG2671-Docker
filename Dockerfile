@@ -3,7 +3,7 @@ FROM node:21.6.1-slim
 LABEL author="Aliaksei"
 LABEL version="0.0.2"
 
-EXPOSE 8081/tcp
+EXPOSE 8080/tcp
 
 RUN groupadd app-gr
 
