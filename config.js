@@ -9,5 +9,5 @@ module.exports = {
 		"port": process.env.MONGO_PORT,
 		"dbName": "idg2671"
 	},
-	"app-port": 8081
+	"app-port": 8080
 };
