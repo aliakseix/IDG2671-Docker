@@ -10,6 +10,7 @@ wd="${WD:-$DEFAULT_WD}"
 cd "$wd"
 
 docker compose -f "${wd}/${COMPOSE_FILE}" down
+docker compose -f "${wd}/${COMPOSE_FILE}" pull
 docker compose -f "${wd}/${COMPOSE_FILE}" up -d
 
 set +e
