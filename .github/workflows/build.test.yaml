@@ -59,5 +59,10 @@ jobs:
         # run: |
         #   hosts_add=$(ssh-keyscan -u tst -H "sustainability.it.ntnu.no")
         #   echo $hosts_add >> ~/.ssh/known_hosts
+      - name: getting ssh-keyscan output
+        run: hosts_add=$(ssh-keyscan -u tst -H "sustainability.it.ntnu.no")
+      - name: pasting ssh-keyscan output
+        run: echo $hosts_add >> ~/.ssh/known_hosts
       - name: Login with SSH, aka run deployment script on the server
-        run: ssh -o StrictHostKeyChecking=no ${{secrets.DEPLOY_SSH_USERNAME}}@${{secrets.DEPLOY_SSH_HOST}}
+        # run: ssh -tt -o StrictHostKeyChecking=no ${{secrets.DEPLOY_SSH_USERNAME}}@${{secrets.DEPLOY_SSH_HOST}}
+        run: ssh -tt -o StrictHostKeyChecking=no tst@sustainability.it.ntnu.no
