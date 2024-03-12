@@ -57,7 +57,7 @@ jobs:
       - name: Adding our prod server to known hosts
         # run: ssh-keyscan -H ${{ secrets.DEPLOY_SSH_HOST }} >> ~/.ssh/known_hosts
         run: |
-          hosts_add=$(ssh-keyscan -H "sustainability.it.ntnu.no")
+          hosts_add=$(ssh-keyscan -u tst -H "sustainability.it.ntnu.no")
           echo $hosts_add >> ~/.ssh/known_hosts
       - name: Login with SSH, aka run deployment script on the server
         run: ${{secrets.DEPLOY_SSH_USERNAME}}@${{secrets.DEPLOY_SSH_HOST}}
