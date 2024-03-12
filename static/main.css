@@ -2,6 +2,7 @@
 
 document, body {
 	font-size: 18px;
+	background-color: aqua;
 }
 
 input[type=submit]{
