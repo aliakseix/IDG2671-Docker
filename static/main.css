@@ -11,3 +11,7 @@ input[type=submit]{
 	color: gray;
 	cursor: pointer;
 }
+
+div{
+	background-color: red;
+}
