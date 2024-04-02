@@ -22,4 +22,4 @@ RUN npm install
 # USER usr
 
 # adding -- watch for reload
-CMD ["node", "--inspect=0.0.0.0", "--watch", "server.js"]
+CMD ["node", "--inspect=0.0.0.0", "--watch", "backend/server.js"]

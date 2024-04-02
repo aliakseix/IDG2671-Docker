@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="/main.css">
   </head>
   <body>
-	<h1>Practical Guid: So you want to be a YouTuber?!</h1>
+	<h1>Practical Guide: So you want to be a YouTuber?!</h1>
 	<p>
 		Do the following:
 		<ul>
@@ -34,9 +34,14 @@
 			<ul>
 				<% for(const ad of data){ %>
 					<li>
-						<b><%= ad.txt %></b>
-						Added on:
-						<i><%= ad.date %></i>
+						<span <%= (ad.old)?"class=old-ad":"" %>>
+							<span class="red"><%= ad.author %></span>
+							added advertiser 
+							<b><span class="blue"><%= ad.name %></span></b>
+							on:
+							<i><%= ad.date %></i>
+							(Advertiser homepage: <a href="<%= ad.link %>"><%= ad. link %></a>)
+						</span>
 					</li>
 				<% } %>
 			</ul>
@@ -44,12 +49,29 @@
 	</p>
 	<div>
 		<h2>If you know other sponsors add them here: </h2>
-		<form id="adForm" action="#" method="post" autocomplete="off">
+		<form id="adForm" action="/ads" method="post" autocomplete="off" <%= (locals.isSaveJustAttempted)?"page-after-post":"" %> >
 			<div>
-				<label for"name">Sponsor name: </label>
-				<input type="text" placeholder="type here..." id="name" name="txt"/>
+				<label for="author">Who is submitting an advertiser: </label>
+				<input type="text" placeholder="Your full name here..." id="author" name="author"/>
+			</div>
+			<div>
+				<label for="name">Advertiser name: </label>
+				<input type="text" placeholder="type it here..." id="name" name="name"/>
+			</div>
+			<div>
+				<label for="link">Link to their homepage: </label>
+				<input type="text" placeholder="Paste a link here..." id="link" name="link"/>
 			</div>
 			<input type="submit" value="Suggest new advertiser" />
+			<% if (locals.isSaveJustAttempted) { %>
+				<% if (locals.err) { %>
+					<p class="error" id="error-message">
+						Error: <%= err %>
+					</p>
+				<% } else { %>
+					<p class="success" id="success-message">An advertiser added successfully.</p>
+				<% } %>
+			<% } %>
 		</form>
 	</div>
 	<script src="/main.js"></script>

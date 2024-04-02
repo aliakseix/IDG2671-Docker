@@ -25,8 +25,8 @@ services:
       - mongo_admin_pwd
     healthcheck:
       test: mongosh --eval "db.adminCommand('ping').ok"
-      interval: 6s
-      timeout: 5s
+      interval: 5s
+      timeout: 3s
       retries: 3
     env_file: .mongo.env
     networks:
@@ -38,9 +38,11 @@ services:
       options:
         max-size: 10M
         max-file: 5
+    volumes: 
+      - mongo-local-debug:/data/db
 
   test-app-debug:
-    image: yt-app-comp:debug
+    container_name: yt-app-comp-debug
     labels:
       info: "THIS SETUP IS FOR DEBUG ONLY"
     depends_on:
@@ -77,3 +79,6 @@ secrets:
 
 networks:
   some-fancy-network:
+
+volumes:
+  mongo-local-debug:

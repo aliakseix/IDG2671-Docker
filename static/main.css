@@ -2,7 +2,6 @@
 
 document, body {
 	font-size: 18px;
-	background-color: aqua;
 }
 
 input[type=submit]{
@@ -13,5 +12,28 @@ input[type=submit]{
 }
 
 div{
-	background-color: red;
+	padding: 1vmin;
+}
+
+.red{
+	color: darkred;;
+}
+
+.blue{
+	color: darkslateblue;
+}
+
+.success{
+	font-weight: bold;
+	color: darkgreen;
+}
+
+.error{
+	font-weight: bold;
+	color: red;
+}
+
+.old-ad{
+	background-color: linen;
+	font-weight: lighter;
 }

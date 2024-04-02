@@ -1,7 +1,7 @@
 const express = require("express");
-const mongo = require("mongodb");
 const path = require("path");
 const config = require("./config.js");
+const db = require("./controller.js");
 
 const app = express();
 
@@ -9,31 +9,20 @@ const app = express();
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 
-app.use(express.static(path.join(__dirname, "static")));
+app.use(express.static(path.join(__dirname, "..", "static")));
 
 app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "static", "views"));
-
-
-// connecting Mongo
-const dbConnPr = (()=>{
-	const {protocol, usr, pwd, hostname, port, dbName} = config.mongo;
-	const MONGO_URL = protocol + "://" + usr + ":" + pwd + "@" + hostname + ":" + port;
-	const mongoClient = new mongo.MongoClient(MONGO_URL);
-	return mongoClient.connect().then(connection=>{
-		console.log("Mongo connected.");
-		return connection.db(dbName);
-	});
-})();
+app.set("views", path.join(__dirname, "..", "static", "views"));
 
 // serving content
-app.get("/", (req, res)=>{
+app.get(["/", "/ads"], (req, res)=>{
 	console.log("serving page...");
-	dbConnPr.then(db=>{
-		return db.collection("ads").find({}).toArray();
-	}).then(data=>{
-		res.render("index", {data});
-	}).catch(err=>handleErr(err, res));
+	db
+		.getAllAds()
+		.then(data=>{
+			res.render("index", {data});
+		})
+		.catch(err=>handleErr(err, res));
 });
 
 app.get("/json", (req, res)=>{
@@ -42,14 +31,20 @@ app.get("/json", (req, res)=>{
 });
 
 // handling incoming data
-app.post("/save-ads", (req, res)=>{
-	console.log("Saving an ad...");
-	dbConnPr.then(db=>{
-		const tNow = (new Date()).toUTCString()
-		return db.collection("ads").insertOne({txt: req.body.txt, date: tNow});
-	}).then(()=>{
-		res.send("Added an add. Reload page to see it.");
-	}).catch(err=>handleErr(err, res))
+app.post("/ads", (req, res)=>{
+	console.log("Trying to save an ad...");
+	db
+		.saveAds(req.body)
+		.then((saveErr)=>{
+			debugger;
+			return db
+				.getAllAds()
+				.then(data=>{
+					console.log(data);
+					res.render("index", {data, err: saveErr, isSaveJustAttempted: true});
+				});
+		})
+		.catch(err=>handleErr(err, res));
 });
 
 function handleErr(err, res){
@@ -68,6 +63,5 @@ function quit(eType){
 		console.log("Express server closed.");
 		process.exit();
 	});
-	
 }
 ['SIGINT', 'SIGQUIT', 'SIGTERM'].forEach(eType=>{console.log("Attaching for ", eType); process.on(eType, quit);});

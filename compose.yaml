@@ -39,7 +39,7 @@ services:
         max-file: 5
 
   test-app:
-    image: yt-app-comp:0.2
+    container_name: yt-app-comp
     labels:
       cool.example: "some metainformation about our container"
     depends_on:

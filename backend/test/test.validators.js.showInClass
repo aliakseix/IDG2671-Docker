@@ -1,0 +1,64 @@
+const {describe, it, mock} = require("node:test");
+const assert = require("node:assert");
+const validator = require("../validate.js");
+
+function createString(len, s = "x", joinC = " "){
+	return (new Array(len))
+		.fill(s)
+		.join(joinC);
+}
+
+describe("Validator for the user name", ()=>{
+	it("should not allow empty input", async (t)=>{
+		await t.test("including null", ()=>{
+			assert.throws(()=>validator.validateAuthorName(null));
+		});
+		
+		await t.test("including undefined", ()=>{
+			assert.throws(()=>validator.validateAuthorName(undefined));
+		});
+
+		await t.test("including empty strings", ()=>{
+			assert.throws(()=>validator.validateAuthorName(""));
+		});
+
+		await t.test("including empty strings with whitespaces", ()=>{
+			assert.throws(()=>validator.validateAuthorName("  		    		   "));
+		});
+	});
+
+	it("should not be too long", async (t)=>{
+		const MAX_LEN = 50;
+		const expectedErr = new Error("Author name is unrealistically long");
+		await t.test("testing just over the limit", ()=>{
+			const testName = createString(MAX_LEN + 1, "x", "");
+			assert.throws(()=>validator.validateAuthorName(testName), expectedErr);
+		});
+
+		await t.test("testing just under the limit", ()=>{
+			const testName = createString(5, "Peter", " ");
+			assert.ok(()=>validator.validateAuthorName(testName));
+		});
+
+	});
+});
+
+
+describe("Checker of links being alive", ()=>{
+	const link = "https://developer.mozilla.org/en-US/";
+	const fetchF = mock.fn((url)=>{
+		return {ok: true};
+	});
+
+	it("should try to load the link", ()=>{
+		assert.strictEqual(fetchF.mock.calls.length, 0);
+		assert.doesNotReject(validator.checkLinkAlive(link, fetchF));
+		assert.strictEqual(fetchF.mock.calls.length, 1);
+	});
+
+	it("should try to load the link we actually specified", ()=>{
+		validator.checkLinkAlive(link, fetchF);
+		assert.deepStrictEqual(fetchF.mock.calls[1].arguments, [link]);
+		assert.strictEqual(fetchF.mock.calls.length, 2);
+	});
+});

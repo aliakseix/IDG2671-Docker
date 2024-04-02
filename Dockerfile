@@ -19,4 +19,4 @@ RUN npm install --production
 
 USER usr
 
-CMD ["node", "server.js"]
+CMD ["NODE_ENV=production",  "node", "backend/server.js"]
