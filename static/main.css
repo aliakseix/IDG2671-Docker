@@ -1,14 +1,8 @@
 
 
 document, body {
-	font-size: 18px;
-}
-
-input[type=submit]{
-	margin: 1vw;
-	background-color:aliceblue;
-	color: gray;
-	cursor: pointer;
+	font-size: 20px;
+	margin: 2vmin 0;
 }
 
 div{
@@ -23,17 +17,7 @@ div{
 	color: darkslateblue;
 }
 
-.success{
-	font-weight: bold;
-	color: darkgreen;
-}
-
-.error{
-	font-weight: bold;
-	color: red;
-}
-
 .old-ad{
-	background-color: linen;
+	background-color: rgb(212, 210, 209);
 	font-weight: lighter;
 }

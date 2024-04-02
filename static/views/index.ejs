@@ -1,79 +1,121 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>How to become a YouTuber</title>
-    <link rel="stylesheet" href="/main.css">
-  </head>
-  <body>
-	<h1>Practical Guide: So you want to be a YouTuber?!</h1>
-	<p>
-		Do the following:
-		<ul>
-			<li>
-				Pump out videos frequently
-			</li>
-			<li>
-				Choose outrageously clickbaity titles
-			</li>
-			<li>
-				Follow latest dumb trends
-			</li>
-			<li>
-				Have an opinion on everything
-			</li>
-		</ul>
-	</p>
-	<p>
-		List of advertisers to choose from:
-		<% if(!data || !data.length) { %>
-			<b>No advertisers to show yet. Add some.</b>
-		<% } else { %>
-			<ul>
-				<% for(const ad of data){ %>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>How to become a YouTuber</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+		integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<link rel="stylesheet" href="/main.css">
+</head>
+
+<body>
+	<div class="container">
+		<div class="row">
+			<div class="col-12">
+				<h1>Practical Guide: So you want to be a YouTuber?!</h1>
+				<b>
+					Do the following:
+				</b>
+				<ul>
 					<li>
-						<span <%= (ad.old)?"class=old-ad":"" %>>
-							<span class="red"><%= ad.author %></span>
-							added advertiser 
-							<b><span class="blue"><%= ad.name %></span></b>
-							on:
-							<i><%= ad.date %></i>
-							(Advertiser homepage: <a href="<%= ad.link %>"><%= ad. link %></a>)
-						</span>
+						Pump out videos frequently
 					</li>
-				<% } %>
-			</ul>
-		<% } %>
-	</p>
-	<div>
-		<h2>If you know other sponsors add them here: </h2>
-		<form id="adForm" action="/ads" method="post" autocomplete="off" <%= (locals.isSaveJustAttempted)?"page-after-post":"" %> >
-			<div>
-				<label for="author">Who is submitting an advertiser: </label>
-				<input type="text" placeholder="Your full name here..." id="author" name="author"/>
+					<li>
+						Choose outrageously clickbaity titles
+					</li>
+					<li>
+						Follow latest dumb trends
+					</li>
+					<li>
+						Have an opinion on everything
+					</li>
+				</ul>
 			</div>
-			<div>
-				<label for="name">Advertiser name: </label>
-				<input type="text" placeholder="type it here..." id="name" name="name"/>
+		</div>
+		<div class="row">
+			<div class="col-12">
+				<b>
+					List of advertisers to choose from:
+				</b>
+				<% if(!data || !data.length) { %>
+					<b>No advertisers to show yet. Add some.</b>
+					<% } else { %>
+						<ul>
+							<% const sortedData=data.sort((a,b)=>(new Date(a.date)).getTime() - (new
+								Date(b.date)).getTime()
+								) %>
+								<% for(const ad of sortedData){ %>
+									<li>
+										<span class='<%=(ad.old)?"text-secondary old-ad":""%>' >
+											<% if(ad.old){ %>
+												[OLD]
+											<% } %>
+											<span class="red">
+												<%= ad.author %>
+											</span>
+											added
+											<b><span class="blue">
+													<%= ad.name %>
+												</span></b>
+											on:
+											<i>
+												<%= ad.date %>
+											</i>
+											(Homepage: <a href="<%= ad.link %>">
+												<%= ad.link.toString().substring(0, 25) %>
+													<%= (ad.link.toString().length> 25)?"…":"" %>
+											</a>)
+										</span>
+									</li>
+									<% } %>
+						</ul>
+						<% } %>
 			</div>
-			<div>
-				<label for="link">Link to their homepage: </label>
-				<input type="text" placeholder="Paste a link here..." id="link" name="link"/>
+		</div>
+		<div class="row">
+			<div class="col-12">
+				<h2 class="text-info">If you know other sponsors add them here: </h2>
+				<form id="adForm" action="/ads" method="post" autocomplete="off"
+					<%=(locals.isSaveJustAttempted)?"page-after-post":"" %> >
+					<div class="form-group row">
+						<label class="col-4" for="author">Who is submitting an advertiser: </label>
+						<div class="col-8">
+							<input type="text" class="form-control" placeholder="Your full name here..." id="author" name="author" />
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-4" for="name">Advertiser name: </label>
+						<div class="col-8">
+							<input type="text" class="form-control" placeholder="type it here..." id="name" name="name" />
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-4" for="link">Link to their homepage: </label>
+						<div class="col-8">
+							<input type="text" class="form-control" placeholder="Paste a link here..." id="link" name="link" />
+						</div>
+					</div>
+					<div class="text-center">
+						<input type="submit" class="btn btn-lg btn-primary" value="Suggest new advertiser" />
+					</div>
+					
+					<% if (locals.isSaveJustAttempted) { %>
+						<% if (locals.err) { %>
+							<p class="p-3 mb-2 bg-danger text-white" id="error-message">
+								Error: <%= err %>
+							</p>
+						<% } else { %>
+							<p class="p-3 mb-2 bg-success text-white" id="success-message">An advertiser added successfully.</p>
+						<% } %>
+					<% } %>
+				</form>
 			</div>
-			<input type="submit" value="Suggest new advertiser" />
-			<% if (locals.isSaveJustAttempted) { %>
-				<% if (locals.err) { %>
-					<p class="error" id="error-message">
-						Error: <%= err %>
-					</p>
-				<% } else { %>
-					<p class="success" id="success-message">An advertiser added successfully.</p>
-				<% } %>
-			<% } %>
-		</form>
+		</div>
 	</div>
 	<script src="/main.js"></script>
-  </body>
+</body>
+
 </html>
