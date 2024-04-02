@@ -49,26 +49,26 @@
 								) %>
 								<% for(const ad of sortedData){ %>
 									<li>
-										<span class='<%=(ad.old)?"text-secondary old-ad":""%>' >
-											<% if(ad.old){ %>
-												[OLD]
-											<% } %>
-											<span class="red">
-												<%= ad.author %>
+										<% if(ad.premium){ %>
+											<span class='<%=(ad.premium)?"text-secondary premium-ad":""%>'>
+												[PREMIUM]
 											</span>
-											added
-											<b><span class="blue">
-													<%= ad.name %>
-												</span></b>
-											on:
-											<i>
-												<%= ad.date %>
-											</i>
-											(Homepage: <a href="<%= ad.link %>">
-												<%= ad.link.toString().substring(0, 25) %>
-													<%= (ad.link.toString().length> 25)?"…":"" %>
-											</a>)
+										<% } %>
+										<span class="red">
+											<%= ad.author %>
 										</span>
+										added
+										<b><span class="blue">
+												<%= ad.name %>
+											</span></b>
+										on:
+										<i>
+											<%= ad.date %>
+										</i>
+										(Homepage: <a href="<%= ad.link %>">
+											<%= ad.link.toString().substring(0, 25) %>
+												<%= (ad.link.toString().length> 25)?"…":"" %>
+										</a>)
 									</li>
 									<% } %>
 						</ul>
@@ -78,7 +78,7 @@
 		<div class="row">
 			<div class="col-12">
 				<h2 class="text-info">If you know other sponsors add them here: </h2>
-				<form id="adForm" action="/ads" method="post" autocomplete="off"
+				<form id="adForm" action="/advertisers" method="post" autocomplete="off"
 					<%=(locals.isSaveJustAttempted)?"page-after-post":"" %> >
 					<div class="form-group row">
 						<label class="col-4" for="author">Who is submitting an advertiser: </label>

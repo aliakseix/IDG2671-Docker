@@ -17,7 +17,9 @@ div{
 	color: darkslateblue;
 }
 
-.old-ad{
-	background-color: rgb(212, 210, 209);
+.premium-ad{
+	background-color: rgb(199, 213, 199);
 	font-weight: lighter;
+	border-radius: 5px;
+	padding: 1vmin;
 }
