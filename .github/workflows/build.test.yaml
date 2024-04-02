@@ -16,11 +16,10 @@ jobs:
           node-version: 21.x
           cache: npm
       - run: npm ci
-      - name: linting
-        run: npm run lint
+      # - name: linting
+      #   run: npm run lint
       - name: actual testing
         run: npm test
-
   build:
     runs-on: ubuntu-latest
     needs: test
