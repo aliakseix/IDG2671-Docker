@@ -1,0 +1,90 @@
+const { describe, test, it, before, after } = require("node:test");
+const assert = require("node:assert");
+
+const path = require("path");
+const fs = require('fs');
+const mongo = require("mongodb");
+
+const dotenv = require("dotenv");
+const compose = require("docker-compose/dist/v2");
+
+const LOCAL_URI = "localhost";
+const TEST_DB_NAME = "some-fancy-test-database-name-asdfapsirghkjlahfd";
+var serverRef, mainConfig, baseURL;
+
+before(() => {
+	// importing env variables
+	dotenv.config({ path: path.join(process.cwd(), ".env") });
+	dotenv.config({ path: path.join(process.cwd(), ".mongo.env") });
+	// making sure mongo configuration is correct for testing
+	const config = require("../config.js")._injectMongoValues({
+		hostname: LOCAL_URI,
+		dbName: TEST_DB_NAME,
+		pwd: fs.readFileSync(path.join(process.cwd(), "secrets.folder", "mongo_admin_pwd.txt"), "utf-8")
+	});
+	mainConfig = config;
+	// assembling the baseURL for all requests
+	baseURL = `http://${LOCAL_URI}:${config["app-port"]}`;
+	// getting a mongo container up
+	return compose.upOne("test-mongodb-debug", { cwd: process.cwd(), config: "debug-compose.yaml" })
+		.then((args) => {
+			console.log("Mongo container is up");
+		})
+		.then(() => {
+			serverRef = require("../server.js");
+		});
+});
+
+// actual tests
+describe("Integration GET tests for our server", ()=>{
+	it("GET /api/adv should return a list of 5 advertisers", ()=>{
+		return fetch(baseURL + "/api/adv")
+			.then(resp=>{
+				assert.strictEqual(resp.ok, true);
+				return resp.json();
+			})
+			.then(allAdv=>{
+				assert.strictEqual(allAdv.data.length, 5);
+			});
+	});
+});
+
+describe("Integration POST tests for our server", ()=>{
+	it("POST to /advertisers should save an advertiser in MongoDb", ()=>{
+		const options = {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify({author: "Jim Carry", name: "20th century fox", link: "http://www.20thcenturystudios.com/"})
+		};
+		return fetch(baseURL + "/advertisers", options)
+			.then(resp=>{
+				assert.strictEqual(resp.ok, true);
+			});
+	});
+});
+
+after(() => {
+	// clean up a test database
+	const mongoURI = "mongodb://aliaksei:123pwd@localhost:27017";
+	const mongoClient = new mongo.MongoClient(mongoURI);
+	return mongoClient
+		.connect()
+		.then(connection=>connection.db(TEST_DB_NAME))
+		.then(db=>{
+			return db.collection("ads").deleteMany({});
+		})
+		.then(()=>{
+			// remove containers (used for testing, aka mongo)
+			compose.down({
+				cwd: process.cwd(),
+				config: "debug-compose.yaml"
+			});
+		})
+		.then(()=>{
+			serverRef.close();
+			console.log("ALL FINISHED");
+		});
+});
+

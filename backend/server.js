@@ -31,7 +31,7 @@ app.get("/json", (req, res) => {
 });
 
 // api to get all advertisers as json
-app.get("/api/adv?", (req, res)=>{
+app.get("/api/adv?", (req, res) => {
 	console.log("All Advertisers requested as json");
 	controller
 		.getAllAdvertisers()
@@ -42,26 +42,26 @@ app.get("/api/adv?", (req, res)=>{
 });
 
 // api to get one advertiser by name
-app.get("/api/adv/:name?", (req, res)=>{
+app.get("/api/adv/:name?", (req, res) => {
 	console.log("Advertiser requested: ", req.params.name);
 	controller
 		.getAdvertiserByName(req.params.name)
-		.then(adv=>{
-			if(adv){
+		.then(adv => {
+			if (adv) {
 				res.status(200).json(adv);
-			}else{
+			} else {
 				res.status(404).send("No adveriser with such name");
 			}
 		});
 });
 
 // api to delete one advertiser by name
-app.delete("/api/adv/:name?", (req, res)=>{
+app.delete("/api/adv/:name?", (req, res) => {
 	console.log("Deleting Advertiser: ", req.params.name);
 	controller
 		.deleteAdvertiserByName(req.params.name)
-		.then(nDeleted=>{
-			return nDeleted?res.status(200):res.status(404);
+		.then(nDeleted => {
+			return nDeleted ? res.status(200) : res.status(404);
 		});
 });
 
@@ -97,4 +97,9 @@ function quit(eType) {
 		process.exit();
 	});
 }
-['SIGINT', 'SIGQUIT', 'SIGTERM'].forEach(eType => { console.log("Attaching for ", eType); process.on(eType, quit); });
+['SIGINT', 'SIGQUIT', 'SIGTERM'].forEach(eType => {
+	// console.log("Attaching for ", eType); 
+	process.on(eType, quit);
+});
+
+module.exports = server;
