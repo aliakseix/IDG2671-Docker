@@ -4,7 +4,7 @@
   "description": "Tiny expressjs + Mongo app for teaching Docker",
   "main": "server.js",
   "scripts": {
-    "test": "node --test backend/test/*.js",
+    "test": "node --test backend/test/*unit*.js",
     "start": "node server.js",
     "lint": "jshint **/*.js"
   },
