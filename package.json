@@ -6,7 +6,7 @@
   "scripts": {
     "test": "node --test backend/test/*.js",
     "start": "node server.js",
-    "lint": "jshint **/*.js"
+    "lint": "eslint"
   },
   "keywords": [
     "need",
@@ -24,7 +24,6 @@
     "dotenv": "^16.4.5",
     "ejs-lint": "^2.0.0",
     "eslint": "^8.57.0",
-    "jshint": "^2.13.6",
     "nock": "^14.0.0-beta.5"
   }
 }

@@ -2,8 +2,6 @@ services:
   test-mongodb-debug:
     image: mongo
     container_name: debug-fancy-mongodb-service
-    ports:
-      - ${MONGO_PORT}:${MONGO_PORT}
     expose:
       - ${MONGO_PORT}
     environment:
