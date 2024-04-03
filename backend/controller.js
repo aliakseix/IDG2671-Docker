@@ -8,12 +8,9 @@ const MAX_AD_AGE_MIN = 300;
 
 // connecting Mongo
 const dbConnPr = (()=>{
-	const {protocol, usr, pwd, hostname, port, dbName} = config.mongo;
-	const MONGO_URL = protocol + "://" + usr + ":" + pwd + "@" + hostname + ":" + port;
+	const {url: MONGO_URL, dbName} = config.mongo;
 	console.log(MONGO_URL);
 	const mongoClient = new mongo.MongoClient(MONGO_URL);
-	// console.log("MONGO_URL: ", MONGO_URL);
-	// console.log("dbName: ", dbName);
 	return mongoClient.connect().then(connection=>{
 		console.log("Mongo connected.");
 		return connection.db(dbName);
