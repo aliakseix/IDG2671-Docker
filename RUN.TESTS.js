@@ -15,7 +15,7 @@ fsp.access(pwdFile)
 		// NOTE: this won't work if you already have a persistent volume for your mongo container -- all passwords will be stored there
 		return fsp
 			.mkdir(path.dirname(pwdFile), {recursive: true})
-			.then(fsp.writeFile(pwdFile, "some-test-password3-t9g8uqbwoheiu2tq[ofinv0w4iewfj", "utf-8"));
+			.then(fsp.writeFile(pwdFile, "some-test-password3-t9g8uqbwoheiu2tqofinv0w4iewfj", "utf-8"));
 	})
 	.then(()=>compose.pullAll({ cwd: CWD, config: COMPOSE_FILE }))
 	.then(()=>fsp.readFile(path.join(CWD, COMPOSE_FILE), "utf-8"))
