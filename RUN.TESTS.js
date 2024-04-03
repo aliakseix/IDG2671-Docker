@@ -13,7 +13,9 @@ fsp.access(pwdFile)
 	.catch(()=>{
 		// creating a temporary file with a password -- for the testing server (and if you try to docker-compose this project yourself, in general)
 		// NOTE: this won't work if you already have a persistent volume for your mongo container -- all passwords will be stored there
-		return fsp.writeFile(pwdFile, "some-test-password3-t9g8uqbwoheiu2tq[ofinv0w4iewfj!@#$%^&*((UYTRDSDCVBJKI*&^RE", "utf-8");
+		return fsp
+			.mkdir(path.dirname(pwdFile), {recursive: true})
+			.then(fsp.writeFile(pwdFile, "some-test-password3-t9g8uqbwoheiu2tq[ofinv0w4iewfj", "utf-8"));
 	})
 	.then(()=>compose.pullAll({ cwd: CWD, config: COMPOSE_FILE }))
 	.then(()=>fsp.readFile(path.join(CWD, COMPOSE_FILE), "utf-8"))
@@ -40,8 +42,9 @@ fsp.access(pwdFile)
 		console.log("Done 'npm test'. No Errors.");
 	})
 	.catch(e=>{
-		console.error("TESTS FAILED:", (e && e.out) || e);
 		ifFailedTests = true;
+		console.error("TESTS FAILED:", (e && e.out) || e);
+		console.error((e && e.stack) || "no STACK TRACE AVAILABLE");
 	})
 	.finally(()=>compose.down({ cwd: CWD, config: COMPOSE_FILE })) // only makes sense for local tests - the GitHub Actions server would be destroyed anyways
 	.then(()=>console.log("Clean up done."))
