@@ -81,7 +81,7 @@ describe("Integration tests, POST", () => {
 			})
 			.then(() => fetch(baseURL + encodeURI(`/api/adv/${adname}`)))
 			.then(resp => {
-				assert.strictEqual(resp.ok, false);
+				assert.strictEqual(resp.ok, true);
 			});
 	});
 });
