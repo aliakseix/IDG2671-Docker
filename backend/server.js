@@ -36,19 +36,18 @@ app.get("/api/adv?", (req, res) => {
 	controller
 		.getAllAdvertisers()
 		.then(data => {
-			res.json({ data });
+			res.json({ data }).end();
 		})
 		.catch(err => handleErr(err, res));
 });
 
 // api to get one advertiser by name
 app.get("/api/adv/:name?", (req, res) => {
-	console.log("Advertiser requested: ", req.params.name);
 	controller
 		.getAdvertiserByName(req.params.name)
 		.then(adv => {
 			if (adv) {
-				res.status(200).json(adv);
+				res.status(200).json(adv).end();
 			} else {
 				res.status(404).send("No adveriser with such name");
 			}
@@ -57,7 +56,6 @@ app.get("/api/adv/:name?", (req, res) => {
 
 // api to delete one advertiser by name
 app.delete("/api/adv/:name?", (req, res) => {
-	console.log("Deleting Advertiser: ", req.params.name);
 	controller
 		.deleteAdvertiserByName(req.params.name)
 		.then(nDeleted => {
@@ -65,9 +63,21 @@ app.delete("/api/adv/:name?", (req, res) => {
 		});
 });
 
+app.post("/api/adv/:name?", (req, res) => {
+	controller
+		.saveAdvertiser(req.body)
+		.then((saveErr) => {
+			if(saveErr){
+				res.status(400).end("Bad data." + saveErr.toString());
+			}else{
+				res.status(200).end();
+			}
+		})
+		.catch(err => handleErr(err, res));
+});
+
 // handling incoming data
 app.post("/advertisers", (req, res) => {
-	console.log("Trying to save an ad...");
 	controller
 		.saveAdvertiser(req.body)
 		.then((saveErr) => {

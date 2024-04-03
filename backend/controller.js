@@ -79,7 +79,7 @@ function saveAdvertiser(adObj){
 		.then(()=>validator.checkLinkAlive(ad.link))
 		.then(()=>dbConnPr)
 		.then(db => db.collection("ads").insertOne(ad))
-		.then(()=>{}) // if success, return nothing (server expects nothing or an error)
+		.then((insRes)=>{}) // if success, return nothing (server expects nothing or an error)
 		.catch(e=>"Advertiser link: " + (e.message || e)); // making sure all errors have the same format
 }
 

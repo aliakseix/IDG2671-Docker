@@ -4,7 +4,7 @@
   "description": "Tiny expressjs + Mongo app for teaching Docker",
   "main": "server.js",
   "scripts": {
-    "test": "node --test backend/test/*unit*.js",
+    "test": "node --test backend/test/*.js",
     "start": "node server.js",
     "lint": "jshint **/*.js"
   },
@@ -25,6 +25,6 @@
     "ejs-lint": "^2.0.0",
     "eslint": "^8.57.0",
     "jshint": "^2.13.6",
-    "nock": "^13.5.4"
+    "nock": "^14.0.0-beta.5"
   }
 }
