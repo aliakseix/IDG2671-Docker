@@ -10,9 +10,8 @@ services:
       labels:
         example.label: This is a pointless label
       restart_policy:
-        condition: on-failure
+        condition: unless-stopped
         delay: 3s
-        max_attempts: 10
         window: 15s
       resources:
         limits:
