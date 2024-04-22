@@ -59,7 +59,7 @@ app.delete("/api/adv/:name?", (req, res) => {
 	controller
 		.deleteAdvertiserByName(req.params.name)
 		.then(nDeleted => {
-			return nDeleted ? res.status(200) : res.status(404);
+			return nDeleted ? res.status(200).end() : res.status(404).end("Couldn't delete an advertiser: bad request");
 		});
 });
 

@@ -1,37 +1,34 @@
 
-
-// function main(){
-// 	document.getElementById("adForm").addEventListener("submit", ev=>{
-// 		ev.preventDefault();
-// 		const adNameEl = document.getElementById("name");
-// 		const adName = adNameEl.value.trim();
-// 		if(!adName){
-// 			adNameEl.value = "";
-// 			adNameEl.setAttribute("placeholder", "Advertiser Name can't be Empty!!!");
-// 			return;
-// 		}
-// 		fetch("/save-ads", {
-// 			method: "POST",
-// 			headers: {
-// 				"Content-Type": "application/json"
-// 			},
-// 			body: JSON.stringify({
-// 				txt: adName
-// 			})
-// 		}).then(resp=>{
-// 			window.location.reload();
-// 		}).catch(err=>{
-// 			console.error(err.message);
-// 			window.alert(err.message);
-// 		});
-// 	});
-// }
+const NETWORK_DELAY = 1000; // not a real thing - just simulating network delays on localhost
 
 function main(){
-	// console.log("Hello from main - not doing anything client-side yet");
 	if(document.getElementById("adForm").hasAttribute("page-after-post")){
 		window.history.replaceState( null, "", window.location.href );
 	}
+
+	// setting up hanlders for deleting records
+	document.querySelectorAll("li input.delete-adv-button").forEach(inpEl=>{
+		inpEl.addEventListener("click", ev=>{
+			// setting up a delay before any action - so it doesn't appear instant on localhost
+			inpEl.parentElement.classList.add("loading");
+			window.setTimeout(async ()=>{
+				const advName = inpEl.parentElement.dataset.advName;
+				const url = `/api/adv/${advName}`;
+				const resp = await fetch(url, {method: "DELETE"});
+				const errorEl = document.querySelector(".error-container");
+				if(resp.ok){
+					inpEl.parentElement.classList.add("hidden");
+					errorEl.classList.remove("show");
+				}else{
+					// show error message
+					errorEl.classList.add("show");
+					errorEl.textContent = "ERROR:" + await resp.text();
+					// show a delete button again
+					inpEl.parentElement.classList.remove("loading");
+				}
+			}, NETWORK_DELAY);
+		});
+	});
 }
 
 if(document.state === "loading"){

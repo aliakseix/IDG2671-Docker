@@ -22,4 +22,58 @@ div{
 	font-weight: lighter;
 	border-radius: 5px;
 	padding: 1vmin;
+	margin-right: 1vmin;
+}
+
+.adv-record{
+	margin: 1vh 0;
+	padding: 1vmin;
+	transition: all 500ms;
+}
+
+.adv-record.hidden{
+	overflow-y: hidden;
+	height: 0;
+	padding-top: 0;
+	padding-bottom: 0;
+}
+
+.adv-record.loading .delete-adv-loader{
+	display: unset;
+}
+
+.adv-record.loading .delete-adv-button{
+	display: none;
+}
+
+.adv-record.loading {
+	/* background-color: lightgray; */
+}
+
+.delete-adv-button{
+	color: red;
+	padding-top:0;
+	padding-bottom: 0;
+	width: 3.5vmin;
+}
+
+.delete-adv-loader{
+	width: 3.5vmin;
+	height: auto;
+	display: none;
+}
+
+.error-container{
+	transition: all 500ms;
+	border: 1px red solid;
+	background-color: rgb(234, 179, 179);
+	font-weight: 900;
+	padding: 1vmin;
+	margin: 1vmin 0;
+	text-align: center;
+	display: none;
+}
+
+.error-container.show{
+	display: block;
 }
