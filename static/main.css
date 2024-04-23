@@ -46,15 +46,12 @@ div{
 	display: none;
 }
 
-.adv-record.loading {
-	/* background-color: lightgray; */
-}
-
 .delete-adv-button{
 	color: red;
 	padding-top:0;
 	padding-bottom: 0;
 	width: 3.5vmin;
+	min-width: 30px;
 }
 
 .delete-adv-loader{

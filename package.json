@@ -5,6 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "node --test backend/test/*.js",
+    "test-e2e": "node --test backend/test/e2e.tests.js",
     "start": "node server.js",
     "lint": "eslint"
   },
@@ -24,6 +25,7 @@
     "dotenv": "^16.4.5",
     "ejs-lint": "^2.0.0",
     "eslint": "^8.57.0",
-    "nock": "^14.0.0-beta.5"
+    "nock": "^14.0.0-beta.5",
+    "puppeteer": "^22.6.5"
   }
 }

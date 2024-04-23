@@ -1,0 +1,139 @@
+const { before, after, describe, it, beforeEach, afterEach } = require("node:test");
+const assert = require("node:assert");
+const puppeteer = require("puppeteer");
+
+describe("The 'How to Become a YouTuber page'", () => {
+	let browser, page;
+	before(async () => {
+		browser = await puppeteer.launch({
+			headless: false,
+			args: [
+				"--window-size=1440,1000"
+				// "--no-sandbox"
+			],
+			slowMo: 10
+		});
+	});
+
+	after(async ()=>{
+		await browser.close();
+	});
+
+	beforeEach(async ()=>{
+		page = await browser.newPage();
+		await page.setViewport({width: 1440, height: 900, isMobile: false, isLandscape: true});
+		// await page.waitForNavigation({waitUtil: "load"});
+		await page.goto("http://localhost:8080/advertisers", {waitUtil: "load"});
+	});
+
+	// cleanup - closing all pages after each test
+	afterEach(async ()=>{
+		const allPages = await browser.pages();
+		for(const aPage of allPages){
+			await aPage.close();
+		}
+	});
+
+	// simple page open and load
+	it("should load", async () => {
+		const title = await page.title();
+		// await page.screenshot({path: "./screenshots/tmp.png", fullPage: true});
+		assert.strictEqual(title, "How to become a YouTuber");
+	});
+
+	it("should render ok on mobile", async ()=>{
+		await page.setViewport({width: 360, height: 800, isMobile: true, isLandscape: true});
+		// await page.waitForNavigation({waitUtil: "networkidle2"});
+		const computedMargin = await page.evaluate(()=>{
+			const mainContainer = document.querySelector("div.container");
+			return parseFloat(window.getComputedStyle(mainContainer)["margin-right"]);
+		});
+		assert.strictEqual(computedMargin, 0);
+	});
+
+	// create a record
+	it("should allow for creating a new record", async ()=>{
+		await mkRecord(page);
+		const msgBox = await page.$("#success-message");
+		assert.ok(msgBox);
+	});
+
+	async function mkRecord(page){
+		const author = "John Davison Rockefeller";
+		const company = "Standard Oil" + "_" + Math.round(Math.random()*100);
+		const url = "https://en.wikipedia.org/wiki/Standard_Oil";
+		await page.type("#author", author);
+		await page.type("#name", company);
+		await page.type("#link", url);
+
+		await Promise.all(
+			[
+				page.click("#adForm input[type='submit']"),
+				page.waitForNavigation({waitUtil: "load"})
+			]
+		);
+	}
+
+	// trying to create a duplicate record
+	it("should prevent from creating a duplicate record", async ()=>{
+		const author = "Doesnt Really Matter";
+		const url = "http://localhost:8080/advertisers";
+		await page.type("#author", author);
+		await page.type("#name", await page.evaluate(()=>document.querySelector(".adv-record").dataset.advName));
+		await page.type("#link", url);
+
+		await Promise.all(
+			[
+				page.click("#adForm input[type='submit']"),
+				page.waitForNavigation({waitUtil: "load"})
+			]
+		);
+
+		const msgBox = await page.$("#error-message");
+		assert.ok(msgBox);
+	});
+
+	// delete a record
+	it("should allow for deleting a record", async()=>{
+		const aRecord = await page.$(".adv-record:last-child");
+		const deleteBtn = await aRecord.$("input.delete-adv-button");
+		const advName = await page.evaluate(el=>el.dataset.advName, aRecord);
+		await deleteBtn.click();
+		await assert.doesNotReject(async ()=>
+			await page.waitForFunction(
+				(advName)=>!!document.querySelector(`li[data-adv-name='${advName}']`)?.classList.contains("hidden"),
+				{timeout: 2000},
+				advName
+			)
+		);
+	});
+
+	// deletion - open 2 pages; delete in one; delete in the other - expect an error to render
+	it("should show an error if trying to delete the same record twice", async()=>{
+		// making a record to delete
+		await mkRecord(page);
+		// opening a second page
+		const anotherPage = await browser.newPage();
+		await anotherPage.setViewport({width: 1440, height: 900, isMobile: false, isLandscape: true});
+		await anotherPage.goto("http://localhost:8080/advertisers", {waitUtil: "load"});
+		// deciding what to delete
+		const advName = await page.evaluate(()=>document.querySelector(".adv-record:last-child").dataset.advName);
+		// deleting from the other page
+		await (await anotherPage.$(`li[data-adv-name='${advName}'] input.delete-adv-button`)).click();
+		await anotherPage.waitForFunction(
+			(advName)=>!!document.querySelector(`li[data-adv-name='${advName}']`)?.classList.contains("hidden"),
+			{timeout: 2000},
+			advName
+		);
+		await anotherPage.close();
+		// trying to delete from the original page
+		await (await page.$(`li[data-adv-name='${advName}'] input.delete-adv-button`)).click();
+		await assert.doesNotReject(async ()=>
+			await page.waitForFunction(
+				()=>!!document.querySelector("p.error-container").classList.contains("show"),
+				{timeout: 2000}
+			)
+		);
+	});
+	
+});

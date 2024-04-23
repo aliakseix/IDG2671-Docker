@@ -49,7 +49,7 @@
 								Date(b.date)).getTime()
 								) %>
 								<% for(const ad of sortedData){ %>
-									<li data-adv-name="<%= ad.name %>" class="clearfix adv-record">
+									<li data-adv-name="<%= ad.name %>" class="adv-record">
 										<input class="delete-adv-button" type="button" value="X" />
 										<img src="/loader.gif" class="delete-adv-loader"/>
 										<% if(ad.premium){ %>

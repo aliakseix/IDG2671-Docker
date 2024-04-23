@@ -35,7 +35,8 @@ fsp.access(pwdFile)
 			["--attach", SERVER_SERVICE], 
 			["--abort-on-container-exit"], 
 			["--exit-code-from", SERVER_SERVICE], // forwarding the exit status from the server container to this process
-			["--no-log-prefix"]
+			["--no-log-prefix"],
+			["--build"]
 		]
 	}))
 	.then(()=>{

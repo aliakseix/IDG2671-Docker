@@ -71,7 +71,8 @@ services:
       - some-fancy-network
     # sharing main dir files - to skip rebuilding containers on every change
     volumes:
-      - .:/app
+      - '.:/app'
+      - /app/node_modules/
 
 secrets:
   mongo_admin_pwd:
