@@ -115,7 +115,7 @@ describe("The 'How to Become a YouTuber page'", () => {
 		// opening a second page
 		const anotherPage = await browser.newPage();
 		await anotherPage.setViewport({width: 1440, height: 900, isMobile: false, isLandscape: true});
-		await anotherPage.goto("http://localhost:8080/advertisers", {waitUtil: "load"});
+		await anotherPage.goto("http://localhost:8080/advertisers", {waitUntil: "load"});
 		// deciding what to delete
 		const advName = await page.evaluate(()=>document.querySelector(".adv-record:last-child").dataset.advName);
 		// deleting from the other page

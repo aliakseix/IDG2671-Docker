@@ -1,0 +1,113 @@
+const { describe, it, after, before, afterEach, beforeEach } = require("node:test");
+const assert = require("node:assert");
+const puppeteer = require('puppeteer');
+
+
+describe("The 'how to be a youtuber page'", () => {
+	let browser, page;
+	before(async () => {
+		browser = await puppeteer.launch({
+			headless: false,
+			slowMo: 25,
+			args: [
+				"--window-size=1440,1000"
+			]
+		});
+	});
+
+	after(async () => {
+		await browser.close();
+	});
+
+	beforeEach(async () => {
+		page = await browser.newPage();
+		await page.setViewport({ width: 1440, height: 900 });
+		await page.goto("http://localhost:8080/advertisers");
+	});
+
+	afterEach(async () => {
+		const pages = await browser.pages();
+		for (const aPage of pages) {
+			await aPage.close();
+		}
+	});
+
+	it("should load", async()=>{
+		const title = await page.title();
+		// await page.screenshot({path: "./screenshots/page.png", fullPage: true});
+		assert.strictEqual(title, "How to become a YouTuber");
+	});
+
+	it("should render ok on mobile", async () => {
+		await page.setViewport({ width: 360, height: 800, isMobile: true, isLandscape: false });
+		const computedMargin = await page.evaluate(() => {
+			const containerEl = document.querySelector(".container");
+			return parseFloat(window.getComputedStyle(containerEl)["margin-right"]);
+		});
+		assert.strictEqual(computedMargin, 0);
+	});
+
+	it("should allow for creating a new record", async () => {
+		await mkRecord(page);
+		const msgBox = await page.$("#success-message");
+		assert.ok(msgBox);
+	});
+
+	async function mkRecord(page) {
+		const author = "Daniel Radcliffe";
+		const company = "Harry Potter Productions";
+		const url = "http://localhost:8080/";
+		await page.type("#author", author);
+		await page.type("#name", company + "_" + Math.round(Math.random() * 100));
+		await page.type("#link", url);
+
+		await Promise.all([
+			page.click("#adFrom, input[type='submit']"),
+			page.waitForNavigation({ waitUtil: "load" })
+		]);
+	}
+
+	it("should prevent us from creating a duplicate record", async () => {
+		const author = "Daniel Radcliffe";
+		const company = await page.evaluate(() => document.querySelector(".adv-record").dataset.advName);
+		const url = "http://localhost:8080/";
+		await page.type("#author", author);
+		await page.type("#name", company);
+		await page.type("#link", url);
+
+		await Promise.all([
+			page.click("#adFrom, input[type='submit']"),
+			page.waitForNavigation({ waitUtil: "load" })
+		]);
+
+		const msgBox = await page.$("#error-message");
+		assert.ok(msgBox);
+	});
+
+	it("should show an error when trying to delete the same record twice", async () => {
+		await mkRecord(page);
+		const anotherPage = await browser.newPage();
+		await anotherPage.setViewport({ width: 1440, height: 900 });
+		await anotherPage.goto("http://localhost:8080/advertisers", {waitUntil: "load"});
+
+		const advName = await page.evaluate(() => document.querySelector(".adv-record:last-child").dataset.advName);
+
+		await (await anotherPage.$(`li[data-adv-name="${advName}"] input.delete-adv-button`)).click();
+		await anotherPage.waitForFunction(
+			(advertiserName)=>!!document.querySelector(`li[data-adv-name='${advertiserName}']`)?.classList.contains("hidden"),
+			{timeout: 2000},
+			advName
+		);
+
+		await anotherPage.close();
+		await (await page.$(`li[data-adv-name="${advName}"] input.delete-adv-button`)).click();
+
+		await assert.doesNotReject(async () =>
+			await page.waitForFunction(
+				() => !!document.querySelector("p.error-container").classList.contains("show"),
+				{ timeout: 2000 }
+			)
+		);
+	});
+});
+
