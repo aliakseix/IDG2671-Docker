@@ -62,7 +62,9 @@ services:
         max-size: 10M
         max-file: 5
     networks:
-      - some-fancy-network
+        some-fancy-network:
+          aliases:
+            - ${SERVER_APP_HOSTNAME}
 
   client-test-app:
     image: aliakseix/idg2671-client:latest
