@@ -21,24 +21,26 @@ fsp.access(pwdFile)
 	.then(()=>fsp.readFile(path.join(CWD, COMPOSE_FILE), "utf-8"))
 	.then(configAsString=>{
 		// swapping the entry point in our container from starting a server to runnning tests
-		const swapRgXp = new RegExp(`${SERVER_SERVICE}:\\s*`, "g");
+		const swapRgXp = new RegExp(`${SERVER_SERVICE}:\\s*`);
 		return configAsString.replace(swapRgXp, match=>{
 			const correctTabs = match.split("\n").pop(); // tabs before the command after "test-app-debug"
 			return match + "command: npm test\n" + correctTabs;
 		});
 	})
-	.then(configAsString => compose.upAll({
-		cwd: process.cwd(),
-		configAsString,
-		log: true,
-		commandOptions: [
-			["--attach", SERVER_SERVICE], 
-			["--abort-on-container-exit"], 
-			["--exit-code-from", SERVER_SERVICE], // forwarding the exit status from the server container to this process
-			["--no-log-prefix"],
-			["--build"]
-		]
-	}))
+	.then(configAsString => compose.upAll(
+		{
+			cwd: process.cwd(),
+			configAsString,
+			log: true,
+			commandOptions: [
+				["--attach", SERVER_SERVICE], 
+				["--abort-on-container-exit"], 
+				["--exit-code-from", SERVER_SERVICE], // forwarding the exit status from the server container to this process
+				["--no-log-prefix"],
+				["--build"]
+			]
+		}
+	))
 	.then(()=>{
 		console.log("Done 'npm test'. No Errors.");
 	})

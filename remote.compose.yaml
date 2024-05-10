@@ -48,13 +48,33 @@ services:
         restart: true
     restart: unless-stopped
     ports:
-      - ${APP_PORT}:${APP_PORT}
+      - ${SERVER_APP_PORT}:${SERVER_APP_PORT}
     environment:
       MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/mongo_admin_pwd
     secrets:
       - mongo_admin_pwd
     env_file:
       - .mongo.env
+      - .env
+    logging:
+      driver: "local"
+      options:
+        max-size: 10M
+        max-file: 5
+    networks:
+      - some-fancy-network
+
+  client-test-app:
+    image: aliakseix/idg2671-client:latest
+    labels:
+      info: "some metainformation about the client app"
+    depends_on:
+      test-mongodb:
+        condition: service_healthy
+        restart: true
+    ports:
+      - ${CLIENT_APP_PORT}:${CLIENT_APP_PORT}
+    env_file:
       - .env
     logging:
       driver: "local"

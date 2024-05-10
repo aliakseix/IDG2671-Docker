@@ -12,7 +12,10 @@ module.exports = {
 			return `${this.protocol}://${this.usr}:${this.pwd}@${this.hostname}:${this.port}`;
 		}
 	},
-	"app-port": process.env.APP_PORT,
+	"server-app-host": process.env.SERVER_APP_HOSTNAME,
+	"server-app-host-remote": "tst-api.sustainability.it.ntnu.no",
+	"server-app-port": process.env.SERVER_APP_PORT,
+	"client-app-port": process.env.CLIENT_APP_PORT,
 	_injectMongoValues(newValAsObj){
 		Object.assign(this.mongo, newValAsObj);
 		return this;

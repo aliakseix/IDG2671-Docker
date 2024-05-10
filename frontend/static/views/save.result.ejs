@@ -1,0 +1,8 @@
+
+<% if (locals.err) { %>
+	<p class="p-3 mb-2 bg-danger text-white" id="error-message">
+		Error: <%= err %>
+	</p>
+<% } else { %>
+	<p class="p-3 mb-2 bg-success text-white" id="success-message">An advertiser added successfully.</p>
+<% } %>

@@ -40,48 +40,15 @@
 				<b>
 					List of advertisers to choose from:
 				</b>
-				<% if(!data || !data.length) { %>
-					<b>No advertisers to show yet. Add some.</b>
-					<% } else { %>
-						<p class="error-container"></p>
-						<ul>
-							<% const sortedData=data.sort((a,b)=>(new Date(a.date)).getTime() - (new
-								Date(b.date)).getTime()
-								) %>
-								<% for(const ad of sortedData){ %>
-									<li data-adv-name="<%= ad.name %>" class="adv-record">
-										<input class="delete-adv-button" type="button" value="X" />
-										<img src="/loader.gif" class="delete-adv-loader"/>
-										<% if(ad.premium){ %>
-											<span class='<%=(ad.premium)?"text-secondary premium-ad":""%>'>
-												[TOP]
-											</span>
-										<% } %>
-										<span class="red">
-											<%= ad.author %>
-										</span>
-										added
-										<b><span class="blue">
-												<%= ad.name %>
-											</span></b>
-										on:
-										<i>
-											<%= ad.date %>
-										</i>
-										(<a href="<%= ad.link %>">
-											<%= ad.link.toString().substring(0, 25) %>
-												<%= (ad.link.toString().length> 25)?"…":"" %>
-										</a>)
-									</li>
-									<% } %>
-						</ul>
-						<% } %>
+				<div id="record-container">
+					<%- include('records.ejs', {data}) %>
+				</div>
 			</div>
 		</div>
 		<div class="row">
 			<div class="col-12">
 				<h2 class="text-info">If you know other sponsors add them here: </h2>
-				<form id="adForm" action="/advertisers" method="post" autocomplete="off"
+				<form id="adForm" action="#" method="post" autocomplete="off"
 					<%=(locals.isSaveJustAttempted)?"page-after-post":"" %> >
 					<div class="form-group row">
 						<label class="col-4" for="author">Who is submitting an advertiser: </label>
@@ -105,19 +72,19 @@
 						<input type="submit" class="btn btn-lg btn-primary" value="Suggest new advertiser" />
 					</div>
 					
-					<% if (locals.isSaveJustAttempted) { %>
-						<% if (locals.err) { %>
-							<p class="p-3 mb-2 bg-danger text-white" id="error-message">
-								Error: <%= err %>
-							</p>
-						<% } else { %>
-							<p class="p-3 mb-2 bg-success text-white" id="success-message">An advertiser added successfully.</p>
-						<% } %>
-					<% } %>
+					<div id="record-save-result-msg">
+
+					</div>
 				</form>
 			</div>
 		</div>
 	</div>
+	<script>
+		window.app = {};
+		window.app.apiServerHost = "<%= locals.apiServerHost %>";
+		window.app.apiServerPort = "<%= locals.apiServerPort %>";
+	</script>
+	<script src="/ejs.min.js"></script>
 	<script src="/main.js"></script>
 </body>
 

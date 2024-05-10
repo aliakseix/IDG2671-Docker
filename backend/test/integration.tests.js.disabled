@@ -25,7 +25,7 @@ before(() => {
 	});
 	mainConfig = config;
 	// assembling the baseURL for all requests
-	baseURL = `http://${LOCALHOST}:${config["app-port"]}`;
+	baseURL = `http://${LOCALHOST}:${config["server-app-port"]}`;
 	// getting a mongo container up
 	return compose.upOne("test-mongodb-debug", { cwd: process.cwd(), config: "debug-compose.yaml" })
 		.then((args) => {

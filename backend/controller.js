@@ -1,5 +1,5 @@
 const mongo = require("mongodb");
-const config = require("./config.js");
+const config = require("../config.js");
 const extService = require("./3rd.party.api");
 
 const validator = require("./validate.js");

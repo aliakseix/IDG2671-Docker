@@ -21,4 +21,4 @@ USER usr
 
 ENV NODE_ENV=production
 
-CMD ["node", "backend/server.js"]
+CMD ["node", "frontend/server.js"]

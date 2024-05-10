@@ -52,8 +52,10 @@ services:
     build:
       context: .
       dockerfile: ./debug.Dockerfile
+      args:
+        exposedPort: ${SERVER_APP_PORT}
     ports:
-      - ${APP_PORT}:${APP_PORT}
+      - ${SERVER_APP_PORT}:${SERVER_APP_PORT}
       - 9229:9229
     environment:
       MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/mongo_admin_pwd
@@ -61,6 +63,37 @@ services:
       - mongo_admin_pwd
     env_file:
       - .mongo.env
+      - .env
+    logging:
+      driver: "local"
+      options:
+        max-size: 10M
+        max-file: 5
+    networks:
+        some-fancy-network:
+          aliases:
+            - ${SERVER_APP_HOSTNAME}
+    # sharing main dir files - to skip rebuilding containers on every change
+    volumes:
+      - '.:/app'
+      - /app/node_modules/
+
+  client-test-app-debug:
+    container_name: client-yt-app-comp-debug
+    labels:
+      info: "THIS SETUP IS FOR DEBUG ONLY"
+    depends_on:
+      test-mongodb-debug:
+        condition: service_healthy
+        restart: true
+    build:
+      context: .
+      dockerfile: ./debug.Dockerfile
+    command: ["node", "--inspect=0.0.0.0", "--watch", "frontend/server.js"]
+    ports:
+      - ${CLIENT_APP_PORT}:${CLIENT_APP_PORT}
+      - 9228:9229
+    env_file:
       - .env
     logging:
       driver: "local"

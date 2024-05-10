@@ -8,15 +8,15 @@ const nock = require("nock"); // make sure to install beta - else no support for
 const mockApiData = require("./api.mock.response.json");
 const TEST_DB = "some-throw-away-name";
 const LOCALHOST = "localhost";
-var serverRef, baseURL, config;
+var serverRef, serverBaseURL, config;
 
 before(() => {
 	// making sure mongo configuration is correct for testing
-	config = require("../config.js")._injectMongoValues({
+	config = require("../../config.js")._injectMongoValues({
 		dbName: TEST_DB
 	});
 	// assembling the baseURL for all requests
-	baseURL = `http://${LOCALHOST}:${config["app-port"]}`;
+	serverBaseURL = `http://${LOCALHOST}:${config["server-app-port"]}`;
 	// setting up network mocks - to avoid calling external services (isolation of tested module + faster tests)
 	nock("https://my.api.mockaroo.com")
 		.get("/idg2671_test.json?key=a855c5b0")
@@ -53,7 +53,7 @@ after(() => {
 
 describe("Integration tests for our server, GET", async () => {
 	it("should return a list of 5 advertisers", async () => {
-		return fetch(baseURL + "/api/adv")
+		return fetch(serverBaseURL + "/api/adv")
 			.then((resp) => {
 				assert.strictEqual(resp.ok, true);
 				return resp.json();
@@ -75,11 +75,11 @@ describe("Integration tests, POST", () => {
 			},
 			body: JSON.stringify({ author: "Jhon Doe", name: adname, link: "https://raidshadowlegends.com/" })
 		};
-		return fetch(baseURL + encodeURI(`/api/adv/${adname}`), opts)
+		return fetch(serverBaseURL + encodeURI(`/api/adv/${adname}`), opts)
 			.then((resp) => {
 				assert.strictEqual(resp.ok, true);
 			})
-			.then(() => fetch(baseURL + encodeURI(`/api/adv/${adname}`)))
+			.then(() => fetch(serverBaseURL + encodeURI(`/api/adv/${adname}`)))
 			.then(resp => {
 				assert.strictEqual(resp.ok, true);
 			});

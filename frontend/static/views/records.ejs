@@ -1,0 +1,36 @@
+<% if(!data || !data.length) { %>
+	<b>No advertisers to show yet. Add some.</b>
+	<% } else { %>
+		<p class="error-container"></p>
+		<ul>
+			<% const sortedData=data.sort((a,b)=>(new Date(a.date)).getTime() - (new
+				Date(b.date)).getTime()
+				) %>
+				<% for(const ad of sortedData){ %>
+					<li data-adv-name="<%= ad.name %>" class="adv-record">
+						<input class="delete-adv-button" type="button" value="X" />
+						<img src="/loader.gif" class="delete-adv-loader"/>
+						<% if(ad.premium){ %>
+							<span class='<%=(ad.premium)?"text-secondary premium-ad":""%>'>
+								[TOP]
+							</span>
+						<% } %>
+						<span class="red">
+							<%= ad.author %>
+						</span>
+						added
+						<b><span class="blue">
+								<%= ad.name %>
+							</span></b>
+						on:
+						<i>
+							<%= ad.date %>
+						</i>
+						(<a href="<%= ad.link %>">
+							<%= ad.link.toString().substring(0, 25) %>
+								<%= (ad.link.toString().length> 25)?"…":"" %>
+						</a>)
+					</li>
+					<% } %>
+		</ul>
+<% } %>
