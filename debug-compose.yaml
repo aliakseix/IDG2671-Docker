@@ -52,8 +52,6 @@ services:
     build:
       context: .
       dockerfile: ./debug.Dockerfile
-      args:
-        exposedPort: ${SERVER_APP_PORT}
     ports:
       - ${SERVER_APP_PORT}:${SERVER_APP_PORT}
       - 9229:9229

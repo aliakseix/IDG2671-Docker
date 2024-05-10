@@ -4,7 +4,7 @@ LABEL author="Aliaksei"
 LABEL version="0.0.2"
 
 ARG exposedPort
-EXPOSE ${exposedPort}/tcp
+EXPOSE 8090/tcp
 
 RUN groupadd app-gr
 
