@@ -64,6 +64,6 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
       - name: Adding our prod server to known hosts
-        run: ssh-keyscan -v -H ${{ secrets.DEPLOY_SSH_HOST }} >> ~/.ssh/known_hosts
+        run: ssh-keyscan -v -v -v -H ${{ secrets.DEPLOY_SSH_HOST }} >> ~/.ssh/known_hosts
       - name: Login with SSH, aka run deployment script on the server
         run: ssh -tt ${{secrets.DEPLOY_SSH_USERNAME}}@${{secrets.DEPLOY_SSH_HOST}}
